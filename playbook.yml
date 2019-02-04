@@ -1,0 +1,20 @@
+---
+- hosts: web
+  remote_user: root
+
+  tasks: 
+  - name: Install nginx
+    package:
+      name: nginx
+      state: present
+  - name: Start service
+    service:
+      name: nginx
+      enabled: yes
+      state: started
+  - name: Add rule for http protocol 
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes

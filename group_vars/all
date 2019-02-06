@@ -1,0 +1,5 @@
+hostname:
+  - 'dev1.nevgin.devops.rebrain.srwx.net'
+  - 'dev2.nevgin.devops.rebrain.srwx.net'
+nginx_user: nginx
+

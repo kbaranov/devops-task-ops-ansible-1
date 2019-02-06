@@ -10,4 +10,12 @@ server {
 	location / {
 		try_files $uri $uri/ =404;
 	}
+        {% for loc in locations %}
+        {% set _loc = locations[loc] %}
+        location /{{ loc }}/ {
+        alias {{ _loc.path }}; 
+        }
+
+{% endfor %}
+
 }

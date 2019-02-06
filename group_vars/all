@@ -2,4 +2,9 @@ hostname:
   - 'dev1.nevgin.devops.rebrain.srwx.net'
   - 'dev2.nevgin.devops.rebrain.srwx.net'
 nginx_user: nginx
+locations:
+  location1:
+    path: /var/www/html/dev1.nevgin.devops.rebrain.srwx.net/
+  location2:
+    path: /var/www/html/dev1.nevgin.devops.rebrain.srwx.net/
 

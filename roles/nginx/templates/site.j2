@@ -1,0 +1,21 @@
+
+server {
+	listen 80;
+
+	server_name {{ item }};
+
+	root /var/www/html/{{ item }};
+	index index.html;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+        {% for loc in locations %}
+        {% set _loc = locations[loc] %}
+        location /{{ loc }}/ {
+        alias {{ _loc.path }}; 
+        }
+
+{% endfor %}
+
+}

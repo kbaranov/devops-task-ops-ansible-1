@@ -1,40 +1,34 @@
 ---
 # tasks file for sslcert
-- openssl_privatekey:
-  path: /etc/nginx/ssl/{{domain}}.key
-  
-- openssl_csr:
-  path: /etc/nginx/ssl/{{domain}}.csr
-  privatekey_path: /etc/nginx/ssl/{{domain}}.key
-  common_name: {{ domain }}
-
-- name: Make sure account exists and has given contacts. We agree to TOS.
-  acme_account:
-    account_key_src: {{ account_key_path }}
+- name: Enable epel repo
+  yum:
+    name: epel-release
     state: present
-    terms_agreed: yes
-    contact:
-    - mailto: nevgin@yandex.ru
 
-- name: Create a challenge for sample.com using a account key file.
-  acme_certificate:
-    account_key_src: {{ account_key }}
-    csr: /etc/nginx/ssl/{{ domain }}.csr
-    dest: /etc/nginx/ssl/{{ domain }}.crt
-    fullchain_dest: /etc/nginx/ssl/{{ domain }}-fullchain.crt
-  register: domain_challenge
+- name: Install certbot
+  yum: 
+    name: certbot, python2-certbot-nginx
+    state: present
 
-- copy:
-  dest: /var/www/html/{{domain}}/well-know/{{ domain_challenge['challenge_data'][{{ domain }}]['http-01']['resource'] }}
-  content: "{{ domain_challenge['challenge_data'][{{ domain }}]['http-01']['resource_value'] }}"
-  when: domain_challenge is changed
+- name: Register ACMI account
+  shell: "certbot register --non-interactive --agree-tos -m nevgin@yandex.ru"
+  ignore_errors: yes
 
-- name: Let the challenge be validated and retrieve the cert and intermediate certificate
-  acme_certificate:
-    account_key_src: {{ account_key_path }}
-    csr: /etc/nginx/ssl/{{ domain }}.csr
-    dest: /etc/nginx/ssl/{{ domain }}.crt
-    fullchain_dest: /etc/nginx/ssl/{{ domain }}-fullchain.crt
-    chain_dest: /etc/nginx/ssl/{{ domain }}-intermediate.crt
-    data: "{{ domain_challenge }}"
+- name: Issues certificate
+  shell: "certbot --non-interactive --nginx -d {{domain}}"
+
+- name: Enable https on firewall
+  firewalld:
+    service: https
+    permanent: yes
+    immediate: yes
+    state: enabled
+- name: Add to cron renew certificate 
+  cron:
+    cron_file: certbot
+    user: root
+    name: "renew certificate"
+    minute: "0"
+    hour: "0,12"
+    job: "certbot renew"
 

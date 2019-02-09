@@ -10,12 +10,8 @@
     name: certbot, python2-certbot-nginx
     state: present
 
-- name: Register ACMI account
-  shell: "certbot register --non-interactive --agree-tos -m nevgin@yandex.ru"
-  ignore_errors: yes
-
 - name: Issues certificate
-  shell: "certbot --non-interactive --nginx -d {{domain}}"
+  shell: "certbot --non-interactive --agree-tos -m nevgin@yandex.ru --nginx -d {{domain}}"
 
 - name: Enable https on firewall
   firewalld:

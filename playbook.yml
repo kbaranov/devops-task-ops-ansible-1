@@ -1,9 +1,8 @@
 ---
-- hosts: web
-  remote_user: root
+- hosts: all
+  become: yes
   tasks:
   - name: Install nginx
     import_role:
       name: nginx
-      name: sslcert
 

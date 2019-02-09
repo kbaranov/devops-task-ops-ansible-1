@@ -1,0 +1,16 @@
+---
+- name: Copy index html
+  template:
+    src: index.html.j2
+    dest: "/var/www/html/{{ item }}/index.html"
+    owner: "{{ www_user }}"
+    setype: httpd_sys_content_t
+    force: yes
+  loop:
+    "{{ hostname }}"
+- name: Add rule for http protocol
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+

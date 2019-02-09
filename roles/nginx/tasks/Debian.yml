@@ -1,0 +1,10 @@
+---
+- name: Copy index html
+  template:
+    src: index.html.j2
+    dest: "/var/www/html/{{ item }}/index.html"
+    owner: "{{ www_user }}"
+    force: yes
+  loop:
+    "{{ hostname }}"
+

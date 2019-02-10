@@ -4,4 +4,7 @@ hostname:
 locations:
   location1:
     path: /var/www/html/dev1.nevgin.devops.rebrain.srwx.net/
-
+max_connections: 1024
+sendfile: on
+tcp_nodelay: on
+tcp_nopush: on

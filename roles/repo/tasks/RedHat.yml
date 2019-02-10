@@ -1,0 +1,10 @@
+---
+- name: Install repo nginx
+  yum_repository:
+    name: nginx
+    baseurl: http://nginx.org/packages/centos/$releasever/$basearch/
+    gpgkey: https://nginx.org/keys/nginx_signing.key
+    gpgcheck: yes
+    enabled: yes
+    description: nginx stable repo
+

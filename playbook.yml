@@ -1,8 +1,13 @@
 ---
-- hosts: all
+- hosts: web
   become: yes
   tasks:
   - name: Install nginx
     import_role:
       name: nginx
-
+- hosts: db
+  become: yes
+  tasks:
+  - name: Install mysql
+    import_role:
+      name: geerlingguy.mysql

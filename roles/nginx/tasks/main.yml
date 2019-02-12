@@ -23,11 +23,11 @@
     src: site.j2
     dest: "/etc/nginx/sites-available/{{ item }}"
     force: yes
-  loop: "{{ hostname }}"
+  loop: "{{ hostname }}" 
   
 - name: Ensures /var/www/html/{{ item }} dir exists
   file: path=/var/www/html/{{ item }}  state=directory
-  loop: "{{ hostname }}"
+  loop: "{{ hostname }}" 
   
 - name: Ensures /etc/nginx/sites-enabled/ dir exists
   file: path=/etc/nginx/sites-enabled state=directory
@@ -43,8 +43,7 @@
     src:  "/etc/nginx/sites-available/{{ item }}"
     path: "/etc/nginx/sites-enabled/{{ item }}"
     state: link
-  loop:
-    "{{ hostname }}"
+  loop: "{{ hostname }}" 
   notify: restart nginx
 
 - include_tasks: "{{ ansible_os_family }}.yml"

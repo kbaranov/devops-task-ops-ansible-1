@@ -16,6 +16,8 @@ server {
         alias {{ _loc.path }}; 
         }
 
-{% endfor %}
-
+	{% endfor %}
+# BEGIN ANSIBLE MANAGED BLOCK
+# END ANSIBLE MANAGED BLOCK
+include /etc/nginx/ssl/{{ssl_hostname}}.conf;
 }

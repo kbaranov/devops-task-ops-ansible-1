@@ -5,26 +5,30 @@
     name: epel-release
     state: present
 
-- name: Install certbot
-  yum: 
-    name: certbot, python2-certbot-nginx
-    state: present
-
-- name: Issues certificate
-  shell: "certbot --non-interactive --agree-tos -m nevgin@yandex.ru --nginx -d {{domain}}"
-
 - name: Enable https on firewall
   firewalld:
     service: https
     permanent: yes
     immediate: yes
     state: enabled
-- name: Add to cron renew certificate 
-  cron:
-    cron_file: certbot
-    user: root
-    name: "renew certificate"
-    minute: "0"
-    hour: "0,12"
-    job: "certbot renew"
+- name: Ensures ssl dir exist
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+- name: Copy ssl private key
+  copy:
+    content: "{{ ssl_private_key }}"
+    dest: "/etc/nginx/ssl/{{ ssl_hostname }}.key"
+- name: Copy ssl fullchain.key
+  copy: 
+    content: "{{ ssl_fullchain }}"
+    dest: "/etc/nginx/ssl/{{ ssl_hostname }}.crt"
+- name: Adding ssl configuration to virtualhost
+  template:
+    src: ssl.conf.j2
+    dest: "/etc/nginx/ssl/{{ ssl_hostname }}.conf"
+- name: Copy dhparams
+  copy:
+    src: ssl-dhparams.pem 
+    dest: /etc/nginx/ssl/ssl-dhparams.pem
 

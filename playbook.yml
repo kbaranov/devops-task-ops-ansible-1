@@ -5,9 +5,17 @@
   - name: Install nginx
     import_role:
       name: nginx
-- hosts: db
-  become: yes
-  tasks:
-  - name: Install mysql
+  - name: Install ssl cert
     import_role:
-      name: geerlingguy.mysql
+      name: sslcert
+  - name: Ensures for exist dir
+    file:
+      path: "~{{user}}/.ssh"
+      state: directory
+    become_user: "{{user}}"
+  - name: Copy ssh private key
+    copy:
+      content: "{{ ssh_private_key}}"
+      dest: "~{{user}}/.ssh/id_rsa"
+    become_user: "{{user}}"
+
